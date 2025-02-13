@@ -1,0 +1,28 @@
+security:
+
+    providers:
+        user_provider:
+            id: App\Infrastructure\Symfony\Security\SecurityUserProvider
+
+        jwt:
+            lexik_jwt:
+                class: App\Infrastructure\Symfony\Security\User\SecurityUser
+
+    firewalls:
+        login:
+            pattern: ^/login
+            security: false
+
+        api:
+            pattern: ^/
+            provider: jwt
+            stateless: true
+            entry_point: jwt
+            jwt: ~
+            refresh_jwt:
+                check_path: /refresh_token
+                provider: user_provider
+
+    access_control:
+        - { path: ^/api_doc, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
